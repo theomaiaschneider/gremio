@@ -52,9 +52,18 @@ def generate_ics(matches):
 
 # Function to push the updated ICS file to GitHub
 def push_to_github():
-    os.system("git -C gremio add gremio_schedule.ics")
-    os.system('git -C gremio commit -m "Auto-update Grêmio schedule"')
-    os.system("git -C gremio push origin main")  # Change 'main' if your default branch is different
+    # Ensure we're in the correct directory
+    os.chdir(r"C:\Users\theos\gremio")  # Updated path
+    os.system("git add gremio_schedule.ics")
+    
+    # Check if there are any changes before committing
+    status = os.popen("git status --porcelain").read().strip()
+    if status:
+        os.system('git commit -m "Auto-update Grêmio schedule"')
+        os.system("git push origin main")  # Change 'main' if your default branch is different
+        print("Changes pushed to GitHub.")
+    else:
+        print("No changes to commit.")
 
 # Run the functions
 matches = scrape_matches()
