@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from ics import Calendar, Event
 from datetime import datetime
+import os
 
 # ESPN Grêmio schedule URL
 URL = "https://www.espn.com.br/futebol/time/calendario/_/id/6273/gremio"
@@ -49,7 +50,15 @@ def generate_ics(matches):
     with open("gremio_schedule.ics", "w") as f:
         f.writelines(calendar)
 
-# Run script
+# Function to push the updated ICS file to GitHub
+def push_to_github():
+    os.system("git -C gremio add gremio_schedule.ics")
+    os.system('git -C gremio commit -m "Auto-update Grêmio schedule"')
+    os.system("git -C gremio push origin main")  # Change 'main' if your default branch is different
+
+# Run the functions
 matches = scrape_matches()
 generate_ics(matches)
-print("ICS file generated: gremio_schedule.ics")
+push_to_github()
+
+print("ICS file generated and pushed to GitHub: gremio_schedule.ics")
